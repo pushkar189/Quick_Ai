@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dummyCreationData } from '../assets/assets'
-import { Protect, useAuth } from '@clerk/clerk-react'
+import { Protect } from '@clerk/clerk-react'
 import { Gem, Sparkle } from 'lucide-react'
+import CreationItem from '../components/CreationItem'
 
 const Dashboard = () => {
-  const[ creations , setCreations] = useState()
+  const[ creations , setCreations] = useState([])
 
   const getDashboardData = async()=>{
     setCreations(dummyCreationData)
@@ -50,6 +51,10 @@ const Dashboard = () => {
 
         <div className='space-y-3'>
           <p className = 'mt-6 mb-4'>Recent Creations</p>
+          {
+           creations.map((item)=><CreationItem key={item.id} item={item}/>)
+          }
+
         </div>
     </div>
   )
