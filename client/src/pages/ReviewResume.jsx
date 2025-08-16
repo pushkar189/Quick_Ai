@@ -1,6 +1,11 @@
 import { FileText, Sparkles } from 'lucide-react';
 import React, { useState } from 'react'
 import Markdown from 'react-markdown';
+import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const ReviewResume = () => {
 
@@ -9,8 +14,32 @@ const ReviewResume = () => {
   const [loading,setloading]=useState(false);
   const [content,setcontent]=useState('');
 
+  const {getToken} = useAuth()
+
   const onsubmithandler=async(e)=>{
   e.preventDefault();
+
+      try {
+        setloading(true);
+
+
+      const formdata=new FormData()
+      formdata.append('resume',input);
+
+        const {data}=await axios.post('/api/ai/resume-review' ,
+          formdata,{headers:{Authorization:`Bearer ${await getToken()}`}})
+
+          if(data.success){
+            setcontent(data.content);
+          }
+          else{
+            toast.error(data.message);
+          }
+          }
+        catch(error){
+          toast.error(error.message);
+        }
+      setloading(false);
   }
   return (
      <div className='h-full overflow-y-scrollp-6 flex items-start flex-wrap gap-4 text-slate-700 m-4'>

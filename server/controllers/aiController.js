@@ -153,7 +153,7 @@ export const removeimagebackground=async(req,res)=>{
         
         const {userId}=req.auth(); //Clerk confirms which user is making the request.
        
-        const image= req.file;
+        const image = req.file;
         const plan=req.plan;
         
          if(plan!=='premium'){

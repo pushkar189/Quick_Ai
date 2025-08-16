@@ -1,5 +1,10 @@
 import { Scissors, Sparkles } from 'lucide-react';
 import React, { useState } from 'react'
+import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
+
+axios.defaults.baseURL=import.meta.env.VITE_BASE_URL;
 
 const RemoveObject = () => {
 
@@ -10,8 +15,35 @@ const RemoveObject = () => {
   const [loading,setloading]=useState(false);
   const [content,setcontent]=useState('');
 
+  const {getToken} = useAuth()
+
   const onsubmithandler=async(e)=>{
-  e.preventDefault();
+    e.preventDefault();
+
+    try {
+    setloading(true);
+      if(object.split(' ').length>1){
+        return toast.error('Please enter only a single object name to remove');
+      }
+
+      const formdata=new FormData()
+      formdata.append('image',input);
+      formdata.append('object', object); 
+
+        const {data}=await axios.post('/api/ai/remove-image-object' ,
+          formdata,{headers:{Authorization:`Bearer ${await getToken()}`}})
+
+          if(data.success){
+            setcontent(data.content);
+          }
+          else{
+            toast.error(data.message)
+          }
+        } catch (error) {
+          toast.error(error.message)
+          
+        }
+        setloading(false);
   }
 
   return (
