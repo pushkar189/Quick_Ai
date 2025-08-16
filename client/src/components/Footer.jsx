@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="flex-1 flex items-start md:justify-end gap-20">
             <div>
                 <h2 className="font-semibold mb-5 text-gray-800">Company</h2>
-                <ul class="text-sm space-y-2">
+                <ul className="text-sm space-y-2">
                     <li><a href="#">Home</a></li>
                     <li><a href="#">About us</a></li>
                     <li><a href="#">Contact us</a></li>
@@ -34,7 +34,7 @@ const Footer = () => {
             </div>
         </div>
     </div>
-    <p class="pt-4 text-center text-xs md:text-sm pb-5">
+    <p className="pt-4 text-center text-xs md:text-sm pb-5">
         Copyright 2025 © <a href="https://prebuiltui.com">Shivam</a>. All Right Reserved.
     </p>
 </footer>

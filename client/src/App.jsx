@@ -10,9 +10,19 @@ import RemoveObject from './pages/RemoveObject'
 import ReviewResume from './pages/ReviewResume'
 import Community from './pages/Community'
 import GenerateImages from './pages/GenerateImages'
+import { useAuth } from '@clerk/clerk-react'
+import { use } from 'react'
+import { useEffect } from 'react'
 
 
 const App = () => {
+
+  const {getToken} = useAuth()
+  useEffect(() => {
+      getToken().then((token) => console.log(token));
+  } , [] )
+
+
   return (
     <div>
       <Routes>
