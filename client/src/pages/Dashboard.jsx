@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Protect } from '@clerk/clerk-react'
+
 import { Gem, Sparkle } from 'lucide-react'
 import CreationItem from '../components/CreationItem'
 import { useAuth } from '@clerk/clerk-react'
 import axios from 'axios';
 import toast from 'react-hot-toast'
-
+import { motion } from 'framer-motion'
+import { assets } from '../assets/assets'
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -38,61 +39,95 @@ const Dashboard = () => {
     getDashboardData()
   } , [])
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+  };
+
   return (
-    <div className='h-full overflow-y-scroll p-6'>
-      <div className='flex justify-start gap-4 flex-wrap'>
-        {/* Total creation card */}
-        <div className='flex justify-between items-center w-72 p-4 px-6 bg-white
-        rounded-xl border border-gray-200'>
-    <div className='text-slate-600'>
-  <p className='text-sm'>Total creations</p>
-  <h2 className='text-xl font-semibold'>{creations.length}</h2>
-   </div>
-    <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-[#3588F2]
-    to-[#0BB0D7] text-white flex justify-center items-center'>
-  <Sparkle className='w-5 text-white'/>
-    </div>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className='h-full overflow-y-scroll p-6 lg:p-10'
+    >
+      <div className='flex justify-between items-start flex-wrap lg:flex-nowrap gap-10 mb-10'>
+        <div className='flex gap-6 flex-wrap w-full lg:w-auto'>
+          {/* Total creation card */}
+          <motion.div 
+            whileHover={{ y: -5, scale: 1.02 }}
+            className='flex justify-between items-center w-72 p-5 glass-panel rounded-2xl group transition-all duration-300 hover:shadow-[0_0_20px_rgba(102,252,241,0.15)] hover:border-primary/50'
+          >
+            <div className='text-text-light'>
+              <p className='text-sm text-text-light/70 uppercase tracking-wider font-medium mb-1'>Total creations</p>
+              <h2 className='text-3xl font-bold text-white'>{creations.length}</h2>
+            </div>
+            <div className='w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex justify-center items-center shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-shadow'>
+              <Sparkle className='w-6 text-black'/>
+            </div>
+          </motion.div>
+
+          {/* active plan card */}
+          <motion.div 
+            whileHover={{ y: -5, scale: 1.02 }}
+            className='flex justify-between items-center w-72 p-5 glass-panel rounded-2xl group transition-all duration-300 hover:shadow-[0_0_20px_rgba(187,134,252,0.15)] hover:border-[#bb86fc]/50'
+          >
+            <div className='text-text-light'>
+              <p className='text-sm text-text-light/70 uppercase tracking-wider font-medium mb-1'>Active plan</p>
+              <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#bb86fc] to-[#e040fb]'>
+                Premium
+              </h2>
+            </div>
+            <div className='w-12 h-12 rounded-xl bg-gradient-to-br from-[#bb86fc] to-[#e040fb] text-white flex justify-center items-center shadow-lg shadow-[#bb86fc]/20 group-hover:shadow-[#bb86fc]/40 transition-shadow'>
+              <Gem className='w-6 text-white'/>
+            </div>
+          </motion.div>
         </div>
 
-  {/* active palne card */}
-<div className='flex justify-between items-center w-72 p-4 px-6 bg-white
-        rounded-xl border border-gray-200'>
-    <div className='text-slate-600'>
-  <p className='text-sm'>Active plan</p>
-  <h2 className='text-xl font-semibold'>
-    <Protect plan='premium' fallback="Free">
-      Premium
-    </Protect>
-  </h2>
-   </div>
-    <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF61C5]
-    to-[#9E53EE] text-white flex justify-center items-center'>
-  <Gem className='w-5 text-white'/>
-    </div>
+        {/* Animated Dashboard Graphic */}
+        <div className="hidden lg:flex flex-1 justify-end items-center px-10">
+          <motion.img 
+            src={assets.dashboard_graphic} 
+            alt="AI Core"
+            className="w-48 h-48 object-contain drop-shadow-[0_0_30px_rgba(102,252,241,0.3)]"
+            animate={{ 
+              y: [0, -15, 0],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
         </div>
       </div>
 
-{
-  loading?(
-
-<div className='flex justify-center items-center h-3/4'>
-  <div className='animate-spin rounded-full h-11 w-11 border-3 
-  border-purple-500 border-t-transparent'>
-  
-</div>
-</div>
-
-  ):(
-    <div className='space-y-3'>
-  <p className='mt-6 mb-4'>Recent Creations</p>
-{
-  creations.map((item)=><CreationItem key={item.id} item={item}/>)
-}
-
-</div>)
-}
-
-    </div>
+      {loading ? (
+        <div className='flex justify-center items-center h-1/2'>
+          <div className='animate-spin rounded-full h-12 w-12 border-4 border-primary/30 border-t-primary'></div>
+        </div>
+      ) : (
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className='space-y-4'>
+          <h3 className='text-xl font-semibold text-white mb-6 tracking-wide flex items-center gap-2'>
+            <div className="w-2 h-6 rounded bg-primary"></div>
+            Recent Creations
+          </h3>
+          {creations.map((item) => (
+            <motion.div key={item.id} variants={itemVariants}>
+              <CreationItem item={item}/>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
 

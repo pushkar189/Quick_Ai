@@ -4,9 +4,10 @@ import Markdown from 'react-markdown';
 import axios from 'axios';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion'
+import { assets } from '../assets/assets'
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-
 
 const WriteArticle = () => {
    const articlelength=[
@@ -49,66 +50,91 @@ const WriteArticle = () => {
   }
 
   return (
-    <div className='h-full overflow-y-scrollp-6 flex items-start flex-wrap gap-4 text-slate-700 m-4'>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className='h-full overflow-y-auto p-6 lg:p-10 flex flex-col lg:flex-row items-start gap-8'
+    >
         {/* c ol left */}
-        <form onSubmit={onSubmitHandler} className='w-full max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-            <div  className='flex items-center gap-3'>
-               <Sparkle className='w-6 text-[#4A7AFF]'/>
-                <h1 className='text-xl font-semibold'>Artcle configuration</h1>
+        <form onSubmit={onSubmitHandler} className='w-full lg:w-1/2 glass-panel p-6 sm:p-8 rounded-2xl border border-white/10'>
+            <div className='flex items-center gap-3 mb-8'>
+               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                 <Sparkle className='w-5 text-primary'/>
+               </div>
+                <h1 className='text-2xl font-bold text-white tracking-wide'>Article Configuration</h1>
             </div>
 
-             <p className='mt-6 text-sm font-medium'>Article Topic</p>
+             <p className='text-sm font-medium text-text-light/80 mb-2 uppercase tracking-wider'>Article Topic</p>
 
             <input 
-               type="text" className='w-full p-2 px-3 mt-2 outline-none text-sm rounded-md 
-                border border-gray-300' placeholder='The future of artificial intelligence is ...' required />
-            <p className='mt-4 text-sm font-medium'>Article Length</p>
+               type="text" onChange={(e)=>setinput(e.target.value)} value={input}
+               className='w-full p-4 bg-black/20 text-white outline-none text-sm rounded-xl 
+            border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder-text-light/30' placeholder='The future of artificial intelligence is ...' required />
+            
+            <p className='mt-8 mb-3 text-sm font-medium text-text-light/80 uppercase tracking-wider'>Article Length</p>
 
-            <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
+            <div className='flex gap-2 flex-wrap'>
               {articlelength.map((item,index)=>(
                 <span onClick={()=>setselectedlength(item)} 
-                className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedlength.text===item.text ?'bg-blue-50 text-blue-700':'text-gray-500 border-gray-300'}`}  
+                className={`text-xs px-4 py-2 border rounded-lg cursor-pointer transition-all duration-300 ${selectedlength.text===item.text ?'bg-primary/20 text-primary border-primary shadow-[0_0_10px_rgba(102,252,241,0.2)]':'text-text-light/70 border-white/10 hover:bg-white/5 hover:border-white/30'}`}  
                 key={index}>{item.text}</span>
               ))}
             </div>
 
             <br />
-            <button disabled={loading} className='w-full flex justify-center items-center gap-2
-                bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6
-                text-sm rounded-lg cursor-pointer'>
+            <motion.button 
+              whileHover={{ scale: 1.02, boxShadow: "0px 0px 15px rgba(102,252,241,0.4)" }}
+              whileTap={{ scale: 0.98 }}
+              disabled={loading} 
+              className='w-full flex justify-center items-center gap-2
+            bg-primary hover:bg-primary/90 text-black font-bold px-4 py-3.5 mt-2
+            text-sm rounded-xl cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+            >
                 {
-                  loading ? <span className='w-4 h-4 my-1 rounded-full border-2 border-t-transparent 
-                  animate-spin '></span>
+                  loading ? <span className='w-5 h-5 rounded-full border-2 border-black/20 border-t-black animate-spin'></span>
                   :<Edit className='w-5'/>
                 }
-                  Generate article
-            </button>
+                  Generate Article
+            </motion.button>
         </form>
+
         {/* right col */}
-        <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border 
-          border-gray-200 min-h-96 max-h-[600px]'>
-            <div className='flex items-center gap-3'>
-              <Edit className='w-5 h-5 text-[#4A7AFF]'/>
-              <h1 className='text-xl font-semibold'> Generated article</h1>
+        <div className='w-full lg:w-1/2 glass-panel p-6 sm:p-8 rounded-2xl flex flex-col border border-white/10 min-h-[500px] max-h-[700px]'>
+            <div className='flex items-center gap-3 mb-6'>
+              <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center border border-secondary/30">
+                <Edit className='w-5 text-secondary'/>
+              </div>
+              <h1 className='text-2xl font-bold text-white tracking-wide'>Generated Article</h1>
             </div>
 
-            {!content?(<div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex-col items-center gap-5 text-gray-400'>
-                <Edit className='w-9 h-9 '/>
-                <p>Enter a topic and click "Generate article" to get started</p>
-
+            {!content?(
+            <div className='flex-1 flex justify-center items-center rounded-xl bg-black/20 border border-white/5 border-dashed relative overflow-hidden'>
+              <div className='text-sm flex flex-col items-center gap-4 text-text-light/50 text-center px-4 relative z-10'>
+                <motion.img 
+                  src={assets.document_graphic} 
+                  alt="Document"
+                  className="w-32 h-32 object-contain drop-shadow-[0_0_20px_rgba(102,252,241,0.2)]"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <p className="mt-2 text-white/70">Enter a topic and click "Generate article" <br/>to get started</p>
               </div>
-
-            </div>):(
+            </div>
+            ):(
               //converts Markdown text from your backend into formatted HTML in the browser.
-              <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-600'>
-            <div className='reset-tw'> 
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='mt-3 h-full overflow-y-auto text-sm text-text-light/90 pr-2 custom-scrollbar'
+              >
+            <div className='reset-tw prose prose-invert max-w-none'> 
               <Markdown>{content}</Markdown>
               </div>
-                </div>
+                </motion.div>
             )}
         </div>
-    </div>
+    </motion.div>
   )
 }
 

@@ -10,8 +10,8 @@ import pdf from 'pdf-parse/lib/pdf-parse.js';
 
 
 const AI = new OpenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1"
 });
 
 export const generateArticle=async(req,res)=>{
@@ -26,7 +26,7 @@ if(plan!=='premium'&& free_usage>=10){
         }
 
    const response = await AI.chat.completions.create({
-    model: "gemini-2.0-flash",
+    model: "llama-3.1-8b-instant",
     messages: [
         {
             role: "user",
@@ -72,7 +72,7 @@ if(plan!=='premium'&& free_usage>=10){
         }
 
 const response = await AI.chat.completions.create({
-    model: "gemini-2.0-flash",
+    model: "llama-3.1-8b-instant",
     messages: [
         {
             role: "user",
@@ -244,7 +244,7 @@ export const resumereview=async(req,res)=>{
 
 
  const response = await AI.chat.completions.create({
-    model: "gemini-2.0-flash",
+    model: "llama-3.1-8b-instant",
     messages: [
         {
             role: "user",

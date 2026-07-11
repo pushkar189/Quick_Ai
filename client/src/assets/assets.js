@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import gradientBackground from "./gradientBackground.png";
+import ai_hero_graphic from "./ai_hero_graphic.png";
 import user_group from "./user_group.png";
 import star_icon from "./star_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
@@ -10,14 +11,22 @@ import ai_gen_img_1 from "./ai_gen_img_1.png";
 import ai_gen_img_2 from "./ai_gen_img_2.png";
 import ai_gen_img_3 from "./ai_gen_img_3.png";
 
+import dashboard_graphic from "./dashboard_graphic.png";
+import document_graphic from "./document_graphic.png";
+import vision_graphic from "./vision_graphic.png";
+
 export const assets = {
     logo,
     gradientBackground,
+    ai_hero_graphic,
     user_group,
     star_icon,
     star_dull_icon,
     profile_img_1,
     arrow_icon,
+    dashboard_graphic,
+    document_graphic,
+    vision_graphic
 };
 
 export const AiToolsData = [
